@@ -19,6 +19,11 @@ $ ./isisdownload isis.xsl cookies.txt 4519
 wo cookies.txt mit "Export Cookies" generiert wurde.
 4519 ist der Kurs-ID (URL: https://isis.tu-berlin.de/course/view.php?id=4519)
 
+** Mehrere Kurse herunterladen **
+
+$ LIST="4045 4519"
+$ for i in $LIST; do mkdir $i; cd $i; echo "====> $i"; ../isisdownload ../isis.xsl ../cookies.txt $i; cd ..; done
+
 ** Anmerkung **
 
 Es werden ausschließlich PDF-Dateien heruntergeladen.
