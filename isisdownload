@@ -1,16 +1,40 @@
 #!/bin/bash
 
-if [ $# -ne 3 ]; then
-    echo "Usage: $0 XSL_FILE COOKIES_FILE COURSE_NUMBER"
+if [ $# -ne 4 ]; then
+    echo "Usage: $0 ISIS_VERSION XSL_FILE COOKIES_FILE COURSE_NUMBER"
     exit 1
 fi
 
-XSL="$1"
-COOKIES="$2"
-URL="https://isis.tu-berlin.de/course/view.php?id=$3"
+if [ "$1" = "1" ]; then
+    URL="https://isis.tu-berlin.de/archiv/course/view.php?id=$4"
+    PDF_ICON="pdf.gif"
+elif [ "$1" = "2" ]; then
+    URL="https://isis.tu-berlin.de/course/view.php?id=$4"
+    PDF_ICON="pdf-24"
+else 
+    echo -e "\033[41mISIS-Version muss 1 oder 2 sein.\033[0m"
+    exit 1
+fi
+XSL="$2"
+COOKIES="$3"
+
+if [ "$(which wget)" != "" ]; then
+    DL="wget"
+    DL_SILENT="-q"
+    DL_COOKIES="--load-cookies"
+    DL_OUTPUT="-O"
+elif [ "$(which curl)" != "" ]; then
+    DL="curl"
+    DL_SILENT="-s"
+    DL_COOKIES="-b"
+    DL_OUTPUT="-o"
+else
+    echo -e "\033[41mWeder curl noch wget wurden gefunden. Abbruch.\033[0m"
+    exit 1
+fi
 
 # Download course page
-wget -q --load-cookies "$COOKIES" "$URL" -O "/tmp/$$.html"
+$DL $DL_SILENT $DL_COOKIES "$COOKIES" $DL_OUTPUT "/tmp/$$.html" "$URL"
 # Get the files
 xsltproc -html "$XSL" "/tmp/$$.html" 2>/dev/null | while read url img name; do
     if [ "$img" = "" -o "$name" = "" ]; then
@@ -19,10 +43,10 @@ xsltproc -html "$XSL" "/tmp/$$.html" 2>/dev/null | while read url img name; do
         type="`basename "$img"`"
 
         case $type in
-	    pdf-24)
+	    $PDF_ICON)
 	        filename="$(echo $name | sed "y/\//_/").pdf"
 	        echo -e "\033[42m$filename\033[0m"
-	        wget -q --load-cookies "$COOKIES" -O "$filename" "$url"
+	        $DL $DL_SILENT $DL_COOKIES "$COOKIES" $DL_OUTPUT "$filename" "$url"
 	        ;;
             *)
 	        filename="$(echo $name | sed "y/\//_/")"

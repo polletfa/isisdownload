@@ -1,28 +1,43 @@
 ** Voraussetzungen **
 
+Es müssen xsltproc und entweder wget oder curl installiert werden.
+
 Mit Ubuntu:
 $ sudo apt-get install wget xsltproc
+Oder:
+$ sudo apt-get install curl xsltproc
+
+Mit MacOS sollten curl und xsltproc standardmäßig schon installiert werden.
 
 ** ISIS-Login **
 
 1) "Export Cookies"-Firefox-Extension installieren
-2) Bei ISIS anmelden
+2) Bei ISIS anmelden (auch bei ISIS1, um auch Dateien aus der alten ISIS
+   herunterzuladen)
 3) Extras->Export Cookies
 4) Nicht abmelden!
 
 ** Dateien herunterladen **
 
-Beispiel mit "Blick über den Tellerrand":
+$ ./isisdownload ISIS_VERSION XSL_FILE COOKIES_FILE COURSE_ID
 
-$ ./isisdownload isis.xsl cookies.txt 4519
+ISIS_VERSION: 1 oder 2
+XSL_FILE: Pfad zur isis.xsl
+COOKIES_FILE: Datei, die mit "Export Cookies" generiert wurde.
+COURSE_ID: Kurs-ID, die in der URL zu finden ist
+           (zB https://isis.tu-berlin.de/course/view.php?id=4519)
 
-wo cookies.txt mit "Export Cookies" generiert wurde.
-4519 ist der Kurs-ID (URL: https://isis.tu-berlin.de/course/view.php?id=4519)
+Beispiel ISIS 2 - "Blick über den Tellerrand":
+$ ./isisdownload 2 isis.xsl cookies.txt 4519
+
+Beispiel ISIS 1 - "Das Wissen der Griechen":
+$ ./isisdownload 1 isis.xsl cookies.txt 1563
 
 ** Mehrere Kurse herunterladen **
 
 $ LIST="4045 4519"
-$ for i in $LIST; do mkdir $i; cd $i; echo "====> $i"; ../isisdownload ../isis.xsl ../cookies.txt $i; cd ..; done
+$ ISIS_VERSION="2"
+$ for i in $LIST; do mkdir $i; cd $i; echo "====> $i"; ../isisdownload $ISIS_VERSION ../isis.xsl ../cookies.txt $i; cd ..; done
 
 ** Anmerkung **
 

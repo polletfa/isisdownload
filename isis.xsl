@@ -46,7 +46,7 @@
   </xsl:template>
 
   <xsl:template match="a">
-    <xsl:if test="substring(@href, 1, 51) = 'https://isis.tu-berlin.de/mod/resource/view.php?id='">
+    <xsl:if test="substring(@href, 1, 51) = 'https://isis.tu-berlin.de/mod/resource/view.php?id=' or substring(@href, 1, 58) = 'https://isis.tu-berlin.de/archiv/mod/resource/view.php?id='">
       <xsl:value-of select="@href"/><xsl:text> </xsl:text><xsl:value-of select=".//img/@src" /><xsl:text> </xsl:text><xsl:value-of select=".//span/text()" /><xsl:text>&#10;</xsl:text>
     </xsl:if>
   </xsl:template>
