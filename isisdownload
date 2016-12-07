@@ -18,12 +18,12 @@ fi
 XSL="$2"
 COOKIES="$3"
 
-if [ "$(which wget)" != "" ]; then
+if [ "$(which wget 2>/dev/null)" != "" ]; then
     DL="wget"
     DL_SILENT="-q"
     DL_COOKIES="--load-cookies"
     DL_OUTPUT="-O"
-elif [ "$(which curl)" != "" ]; then
+elif [ "$(which curl 2>/dev/null)" != "" ]; then
     DL="curl"
     DL_SILENT="-s"
     DL_COOKIES="-b"
