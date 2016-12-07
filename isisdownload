@@ -12,7 +12,7 @@ elif [ "$1" = "2" ]; then
     URL="https://isis.tu-berlin.de/course/view.php?id=$4"
     PDF_ICON="pdf-24"
 else 
-    echo -e "\033[41mISIS-Version muss 1 oder 2 sein.\033[0m"
+    echo -e "\033[41mFalscher Parameter:\033[0m ISIS-Version muss 1 oder 2 sein."
     exit 1
 fi
 XSL="$2"
@@ -29,7 +29,7 @@ elif [ "$(which curl 2>/dev/null)" != "" ]; then
     DL_COOKIES="-b"
     DL_OUTPUT="-o"
 else
-    echo -e "\033[41mWeder curl noch wget wurden gefunden. Abbruch.\033[0m"
+    echo -e "\033[41mUnerfüllte Voraussetzung:\033[0m Weder curl noch wget wurden gefunden. Abbruch."
     exit 1
 fi
 
@@ -38,19 +38,19 @@ $DL $DL_SILENT $DL_COOKIES "$COOKIES" $DL_OUTPUT "/tmp/$$.html" "$URL"
 # Get the files
 xsltproc -html "$XSL" "/tmp/$$.html" 2>/dev/null | while read url img name; do
     if [ "$img" = "" -o "$name" = "" ]; then
-        echo -e "\033[41m$url\033[0m: Typ oder Name konnte nicht ermittelt werden (wird nicht heruntergeladen)"
+        echo -e "\033[41mIgnoriert (Typ/Name unbekannt):\033[0m $url"
     else
         type="`basename "$img"`"
 
         case $type in
 	    $PDF_ICON)
 	        filename="$(echo $name | sed "y/\//_/").pdf"
-	        echo -e "\033[42m$filename\033[0m"
+	        echo -e "\033[42mPDF:\033[0m $filename"
 	        $DL $DL_SILENT $DL_COOKIES "$COOKIES" $DL_OUTPUT "$filename" "$url"
 	        ;;
             *)
 	        filename="$(echo $name | sed "y/\//_/")"
-                echo -e "\033[41m$filename\033[0m: Kein PDF (wird nicht heruntergeladen)"
+                echo -e "\033[41mIgnoriert (Kein PDF):\033[0m $filename"
                 ;;
         esac
     fi
