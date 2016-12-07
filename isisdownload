@@ -1,0 +1,34 @@
+#!/bin/bash
+
+if [ $# -ne 3 ]; then
+    echo "Usage: $0 XSL_FILE COOKIES_FILE COURSE_NUMBER"
+    exit 1
+fi
+
+XSL="$1"
+COOKIES="$2"
+URL="https://isis.tu-berlin.de/course/view.php?id=$3"
+
+# Download course page
+wget -q --load-cookies "$COOKIES" "$URL" -O "/tmp/$$.html"
+# Get the files
+xsltproc -html "$XSL" "/tmp/$$.html" 2>/dev/null | while read url img name; do
+    if [ "$img" = "" -o "$name" = "" ]; then
+        echo -e "\033[41m$url\033[0m: Typ oder Name konnte nicht ermittelt werden (wird nicht heruntergeladen)"
+    else
+        type="`basename "$img"`"
+
+        case $type in
+	    pdf-24)
+	        filename="$(echo $name | sed "y/\//_/").pdf"
+	        echo -e "\033[42m$filename\033[0m"
+	        wget -q --load-cookies "$COOKIES" -O "$filename" "$url"
+	        ;;
+            *)
+	        filename="$(echo $name | sed "y/\//_/")"
+                echo -e "\033[41m$filename\033[0m: Kein PDF (wird nicht heruntergeladen)"
+                ;;
+        esac
+    fi
+done
+

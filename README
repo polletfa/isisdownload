@@ -1,0 +1,27 @@
+** Voraussetzungen **
+
+Mit Ubuntu:
+$ sudo apt-get install wget xsltproc
+
+** ISIS-Login **
+
+1) "Export Cookies"-Firefox-Extension installieren
+2) Bei ISIS anmelden
+3) Extras->Export Cookies
+4) Nicht abmelden!
+
+** Dateien herunterladen **
+
+Beispiel mit "Blick über den Tellerrand":
+
+$ ./isisdownload isis.xsl cookies.txt 4519
+
+wo cookies.txt mit "Export Cookies" generiert wurde.
+
+** Anmerkung **
+
+Es werden ausschließlich PDF-Dateien heruntergeladen.
+Nur die PDF-Dateien, die in der Vorlesung-Seite mit einem PDF-Icon
+versehen werden, werden tatsächlich heruntergeladen.
+Das Programm listet auch Ressourcen, die nicht heruntergeladen werden
+(kein PDF oder Typ unbekannt).
