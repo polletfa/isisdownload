@@ -17,11 +17,12 @@ Beispiel mit "Blick über den Tellerrand":
 $ ./isisdownload isis.xsl cookies.txt 4519
 
 wo cookies.txt mit "Export Cookies" generiert wurde.
+4519 ist der Kurs-ID (URL: https://isis.tu-berlin.de/course/view.php?id=4519)
 
 ** Anmerkung **
 
 Es werden ausschließlich PDF-Dateien heruntergeladen.
 Nur die PDF-Dateien, die in der Vorlesung-Seite mit einem PDF-Icon
-versehen werden, werden tatsächlich heruntergeladen.
+versehen sind, werden tatsächlich heruntergeladen.
 Das Programm listet auch Ressourcen, die nicht heruntergeladen werden
 (kein PDF oder Typ unbekannt).
