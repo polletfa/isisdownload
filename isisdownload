@@ -41,12 +41,17 @@ xsltproc -html "$XSL" "/tmp/$$.html" 2>/dev/null | while read url img name; do
         echo -e "\033[41mIgnoriert (Typ/Name unbekannt):\033[0m $url"
     else
         type="`basename "$img"`"
-
         case $type in
 	    $PDF_ICON)
 	        filename="$(echo $name | sed "y/\//_/").pdf"
 	        echo -e "\033[42mPDF:\033[0m $filename"
-	        $DL $DL_SILENT $DL_COOKIES "$COOKIES" $DL_OUTPUT "$filename" "$url"
+	        $DL $DL_SILENT $DL_COOKIES "$COOKIES" $DL_OUTPUT "/tmp/$$-file" "$url"
+		if [ "$(head "/tmp/$$-file" -n1 | grep "DOCTYPE")" \!= "" ]; then
+		    url=$(xsltproc -html isis.xsl "/tmp/$$-file" 2>/dev/null|grep RESOURCEPDF|cut -f1 -d\  )
+	            $DL $DL_SILENT $DL_COOKIES "$COOKIES" $DL_OUTPUT "$filename" "$url"
+		else
+		    mv "/tmp/$$-file" "$filename"
+		fi
 	        ;;
             *)
 	        filename="$(echo $name | sed "y/\//_/")"
